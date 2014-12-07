@@ -50,7 +50,6 @@ public final class ServiceDAO {
         
         ArrayList<AttributeDefinition> attributeDefinitions= new ArrayList<AttributeDefinition>();
         attributeDefinitions.add(new AttributeDefinition().withAttributeName("Id").withAttributeType("N"));
-        attributeDefinitions.add(new AttributeDefinition().withAttributeName("InsertTime").withAttributeType("N"));
         request.setAttributeDefinitions(attributeDefinitions);
         
         ArrayList<KeySchemaElement> tableKeySchema = new ArrayList<KeySchemaElement>();
@@ -138,10 +137,8 @@ public final class ServiceDAO {
     }
 
     public void get(final String id) {
-        System.out.println("get: todo");
-
         HashMap<String, AttributeValue> key = new HashMap<String, AttributeValue>();
-        key.put("Id", new AttributeValue().withN("101"));
+        key.put("Id", new AttributeValue().withN(id));
 
         GetItemRequest getItemRequest = new GetItemRequest()
             .withTableName(tableName)

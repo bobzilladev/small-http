@@ -43,6 +43,9 @@ public class Services{
             case "insert":
                 serviceDao.insert(id.or("42"));
                 break;
+            case "get":
+                serviceDao.get(id.or("42"));
+                break;
             case "update":
                 serviceDao.update(id.or("42"));
                 break;
