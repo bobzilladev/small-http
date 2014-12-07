@@ -25,6 +25,8 @@ import com.amazonaws.services.dynamodbv2.model.UpdateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.UpdateTableResult;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
+import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
+import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 
 
 
@@ -48,6 +50,7 @@ public final class ServiceDAO {
         
         ArrayList<AttributeDefinition> attributeDefinitions= new ArrayList<AttributeDefinition>();
         attributeDefinitions.add(new AttributeDefinition().withAttributeName("Id").withAttributeType("N"));
+        attributeDefinitions.add(new AttributeDefinition().withAttributeName("InsertTime").withAttributeType("N"));
         request.setAttributeDefinitions(attributeDefinitions);
         
         ArrayList<KeySchemaElement> tableKeySchema = new ArrayList<KeySchemaElement>();
@@ -111,6 +114,7 @@ public final class ServiceDAO {
     public void insert(final String id) {
         final Map<String, AttributeValue> item = new HashMap<String, AttributeValue>();
         item.put("Id", new AttributeValue().withN(id));
+        item.put("InsertTime", new AttributeValue().withN("" + System.currentTimeMillis()));
             
         PutItemRequest itemRequest = new PutItemRequest().withTableName(tableName).withItem(item);
         client.putItem(itemRequest);
@@ -135,6 +139,17 @@ public final class ServiceDAO {
 
     public void get(final String id) {
         System.out.println("get: todo");
+
+        HashMap<String, AttributeValue> key = new HashMap<String, AttributeValue>();
+        key.put("Id", new AttributeValue().withN("101"));
+
+        GetItemRequest getItemRequest = new GetItemRequest()
+            .withTableName(tableName)
+            .withKey(key);
+
+        GetItemResult result = client.getItem(getItemRequest);
+        Map<String, AttributeValue> map = result.getItem();
+        System.out.println("map: " + map);
     }
 
     private void getTableInformation() {
