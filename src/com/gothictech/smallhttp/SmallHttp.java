@@ -3,8 +3,15 @@ package com.gothictech.smallhttp;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 
 public class SmallHttp extends Application<Config> {
+
+  private AmazonDynamoDBClient client;
+
   public static void main(String[] args) {
     try {
       new SmallHttp().run(args);
@@ -22,14 +29,17 @@ public class SmallHttp extends Application<Config> {
 
   @Override
   public void initialize(Bootstrap<Config> bootstrap) {
-    // nothing to do yet
+    client = new AmazonDynamoDBClient(new ProfileCredentialsProvider());
+    // client.setRegion(Region.getRegion(Regions.US_WEST_1));
+    client.setEndpoint("http://localhost:8000");
   }
 
   @Override
   public void run(Config configuration, Environment environment) {
     final Services resource = new Services(
         configuration.getTemplate(),
-        configuration.getDefaultName()
+        configuration.getDefaultName(),
+        client
     );
     final ServicesHealthCheck healthCheck =
         new ServicesHealthCheck(configuration.getTemplate());
